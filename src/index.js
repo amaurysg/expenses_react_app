@@ -10,19 +10,30 @@ import GastosCat from './components/GastosCat'
 import InicioSesion from './components/InicioSesion'
 import ListaGastos from './components/ListaGastos'
 import RegistroUser from './components/RegistroUser'
+import {Helmet} from 'react-helmet'
+import favicon from './img/logo.png'
+import Fondo from './elements/Fondo'
 
 
 
-WebFont.load({
+/* WebFont.load({
     google: {
       families: ['Work Sans: 400, 500, 700', 'sans-serif']
     }
-  });
+  }); */
 
 
 
 const Index = () =>{
   return (
+
+  <>
+    <Helmet>
+        <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
+        <title>Expenses App</title>
+
+    </Helmet>
+    
     <BrowserRouter>
       <Contenedor>
           <Switch>
@@ -39,6 +50,11 @@ const Index = () =>{
      </Contenedor>
     
     </BrowserRouter>
+
+    <Fondo></Fondo>
+    
+  </>
+
   )
 }
 
