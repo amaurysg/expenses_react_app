@@ -58,11 +58,11 @@ const RegistroUser = () => {
      /* console.log(expresionRegular.test(email)) */
      if ( !expresionRegular.test(email)){
           console.log("Ingresa un email válido")
-          swal("No es un email!", "You clicked the button!", "warning");
+          swal("Email inválido!", "Ingresa un email válido", "warning");
           return
         }
         //Validamos que todos los datos estén llenos
-      if( email=== '' || password === '' || repeatPassword === ''){
+      if( email=== '' && password === '' && repeatPassword === ''){
        
         swal("Llena todos los datos", "You clicked the button!", "info");
         return
@@ -70,19 +70,19 @@ const RegistroUser = () => {
       
       //Validamos que ambos password sean iguales 
       if(  password !== repeatPassword ){
-          swal("Error", "Las contraseñas no son iguales", "info");
+          swal("Contraseñas diferentes", "Ingresa contraseñas iguales", "info");
         console.log("Las contraseñas no son iguales")
         return
       }
       //Si todo esta Ok Registramos
       
       //Funcion conectar a firebase y registrar users
-      //Usamos async await...
+      //Usamos async await...git
 
       try{
         //
          await auth.createUserWithEmailAndPassword(email,password)
-         swal("Usuario Registrado", "You clicked the button!", "success")
+         swal("Usuario Registrado", "Presiona Ok para continuar", "success")
          history.push('/')
 
       }catch (error){
@@ -90,21 +90,25 @@ const RegistroUser = () => {
         //Dependiendo el case, daremos un error más exacto a lo que pasaría
           let mensaje
           switch(error.code){
-                case 'auth/invalid-password':
-                    mensaje = 'La contraseña tiene que ser de al menos 6 caracteres.'
+          
+                case 'auth/weak-password':
+                    mensaje = 'La contraseña tiene que ser de al menos 6 carácteres.'
+                    swal("Carácteres mínimos", `${mensaje}`, "warning")
                     break;
                 case 'auth/email-already-in-use':
-                    mensaje = 'Ya existe una cuenta con el correo electrónico proporcionado.'
-                   
+                    mensaje = 'Ya existe una cuenta con el correo proporcionado.'
+                    swal("Correo existente", `${mensaje}`, "info")
                 break;
                 case 'auth/invalid-email':
                     mensaje = 'El correo electrónico no es válido.'
+                    swal("Don't can", `${mensaje}`, "info")
                 break;
                 default:
                     mensaje = 'Hubo un error al intentar crear la cuenta.'
                 break;
             }
             console.log(mensaje)
+        
       }
     
 
