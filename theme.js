@@ -8,4 +8,4 @@ const theme = {
     grisClaro2: '#CBDDE2',
     azulClaro: '#8792F1'
 }
-export theme
+export default theme
