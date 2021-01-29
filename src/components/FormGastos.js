@@ -13,7 +13,7 @@ import swal from 'sweetalert'
 const FormGastos = () => {
   const [descripcion, setDescripcion] = useState('')
   const [cantidad, setCantidad] = useState('')
-  const [categoria, setCategoria] = useState('Hogar')
+  const [categoria, setCategoria] = useState('hogar')
   const [fecha, setFecha] = useState(new Date())
   const {usuario} = useAuth()
 
@@ -45,7 +45,7 @@ const FormGastos = () => {
         uidUsuario: usuario.uid
       })
       .then(()=>{
-        setCategoria('')
+        setCategoria('hogar')
         setFecha(new Date())
         setCantidad('')
         setDescripcion('')

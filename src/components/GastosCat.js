@@ -20,6 +20,7 @@ const GastosCat = () => {
 
 
       </Header>
+      
       <BarraTotal></BarraTotal>
     </>
   )
