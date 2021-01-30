@@ -35,6 +35,7 @@ import {Link} from 'react-router-dom'
 import Boton from '../elements/Boton'
 import {format, fromUnixTime} from 'date-fns'
 import {es} from 'date-fns/locale'
+import borrarGasto from '../firebase/BorrarGasto'
 
 
 const ListaGastos = () => {
@@ -53,7 +54,7 @@ console.log(usuario)
 
 //Aca traemos los datos de funcion useObtenerGastos
 //Corchetes para acceder por dentro 
-const [gastos] = useObtenerGastos()
+const [gastos, obtenerMasGastos, masPorCargar] = useObtenerGastos()
 
 const formatearFecha = (fecha) =>{
   return format(fromUnixTime(fecha), "dd 'de' MMMM 'de' yyyy", {locale: es}) 
@@ -112,7 +113,7 @@ const FechaEsIgual = (gastos, index, gasto) =>{
                     <BotonAccion  as={Link} to={`/editar/${gasto.id}`}> 
                         <IconoEditar></IconoEditar>  
                      </BotonAccion>
-                    <BotonAccion >
+                    <BotonAccion onClick={()=>borrarGasto(gasto.id)}>
                         <IconoBorrar></IconoBorrar>
                        </BotonAccion>
                   </ContenedorBotones>
@@ -122,9 +123,13 @@ const FechaEsIgual = (gastos, index, gasto) =>{
           )
         })}
 
+        {
+          masPorCargar &&
       <ContenedorBotonCentral>
-          <BotonCargarMas>Cargar más</BotonCargarMas>
+          <BotonCargarMas onClick={()=> obtenerMasGastos()}>Cargar más</BotonCargarMas>
       </ContenedorBotonCentral>
+
+        }
 
         {gastos.length === 0 &&
             <ContenedorSubtitulo>

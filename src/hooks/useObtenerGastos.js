@@ -8,8 +8,28 @@ const useObtenerGastos = () => {
   
   const [gastos, setGastos] = useState([])
   const {usuario} = useAuth()
- 
+  const [ultimoGasto, setUltimoGasto] = useState(null)
+  const [masPorCargar, setMasPorCargar] = useState(false)
   
+
+  const obtenerMasGastos = ()=>{
+      db.collection('gastos')
+      .where('uidUsuario', '==', usuario.uid )
+      .orderBy('fecha', 'desc')
+      .limit(10)
+      .startAfter(ultimoGasto)
+      .onSnapshot((snapshot)=>{
+        if(snapshot.docs.length >0){
+         setUltimoGasto(snapshot.docs[snapshot.docs.length-1])
+         
+         setGastos(gastos.concat(snapshot.docs.map((g) =>{
+           return {...g.data(), id: g.id}
+         })))
+        }else {
+          setMasPorCargar(false)
+        }
+      })
+  }
 
 
   useEffect(() => {
@@ -22,6 +42,12 @@ const useObtenerGastos = () => {
       .limit(10)
       .onSnapshot((snapshot)=>{
         /* console.log(snapshot.docs) */
+        if(snapshot.docs.length > 0){
+          setUltimoGasto(snapshot.docs[snapshot.docs.length-1])
+          setMasPorCargar(true)
+        }else{
+          setMasPorCargar(false)
+        }
         setGastos(snapshot.docs.map((g)=>{
           /* console.log(g.data()) */
             return {...g.data(), id: g.id}
@@ -32,7 +58,7 @@ const useObtenerGastos = () => {
       //agregamos usuario, porque necesitamos que cambie cuando se cambie de usuario
   }, [usuario])
   
-  return [gastos]
+  return [gastos, obtenerMasGastos, masPorCargar]
 
 }
 
