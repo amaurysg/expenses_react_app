@@ -3,8 +3,14 @@ import {Helmet} from 'react-helmet'
 import {Header, Titulo } from '../elements/Header'
 import BtnBack from '../elements/BtnBack'
 import BarraTotal from './BarraTotal'
+import useObtenerGastosMes from '../hooks/useObtenerGastosMes'
+
 
 const GastosCat = () => {
+
+  useObtenerGastosMes()
+ 
+
   return (
     <>
       <Helmet>

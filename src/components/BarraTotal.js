@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ConvertToCoin from '../funciones/ConvertToCoin'
-
+import {useTotalMes} from '../contextos/TotalGastoMesContext'
 
 
 const BarraTotalStyled = styled.div`
@@ -23,10 +23,13 @@ const BarraTotalStyled = styled.div`
 `;
 
 const BarraTotal = () => {
+  const {total} = useTotalMes()
+  /* console.log(total) */
+
   return (
     <BarraTotalStyled>
       <p>Total gastado en el mes</p>
-      <p> {ConvertToCoin(0.00)} </p>
+      <p> {ConvertToCoin(total)} </p>
     </BarraTotalStyled>
   )
 }

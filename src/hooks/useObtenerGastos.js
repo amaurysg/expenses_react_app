@@ -12,7 +12,11 @@ const useObtenerGastos = () => {
   const [masPorCargar, setMasPorCargar] = useState(false)
   
 
+  //Logica para obtener mas gastos del array 
+
   const obtenerMasGastos = ()=>{
+
+    //Accedemos a la coleccion y armamos la logica query
       db.collection('gastos')
       .where('uidUsuario', '==', usuario.uid )
       .orderBy('fecha', 'desc')

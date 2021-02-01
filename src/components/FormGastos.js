@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {ContenedorFiltros, Formulario, Input, InputGrande, ContenedorBoton} from '../elements/ElementosForm'
 import Boton from '../elements/Boton'
 import {ReactComponent as IconoPlus} from '../img/plus.svg'
@@ -9,13 +9,39 @@ import getUnixTime from 'date-fns/getUnixTime'
 import AddGasto from '../firebase/AddGasto'
 import {useAuth} from '../contextos/AuthContext'
 import swal from 'sweetalert'
+import {useHistory} from 'react-router-dom'
+import EditarGasto from '../firebase/EditarGasto'
 
-const FormGastos = () => {
+const FormGastos = ({gasto}) => {
   const [descripcion, setDescripcion] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [categoria, setCategoria] = useState('hogar')
   const [fecha, setFecha] = useState(new Date())
   const {usuario} = useAuth()
+  const history = useHistory()
+
+
+  //useEffect para comprobar si existe el gasto y llenar
+  useEffect(() => {
+    //Comprobamos si ya hay un gasto 
+    //De ser así establecemos todo el state con los valores del gasto
+    if(gasto){
+
+      if(gasto.data().uidUsuario === usuario.uid){
+        console.log(gasto.data())
+        //Si el gasto existe llenamos los parametros... 
+        setCategoria(gasto.data().categoria)
+        setFecha(fromUnixTime(gasto.data().fecha))
+        setDescripcion(gasto.data().descripcion)
+        setCantidad(gasto.data().cantidad)
+
+      }else{
+        history.push('/lista')
+      }
+    }
+
+    //Agregamos dependencias usadas
+  }, [gasto, usuario, history])
 
   const handleChange = (e) =>{
     if(e.target.name === 'descripcion'){
@@ -35,9 +61,33 @@ const FormGastos = () => {
     let cantidadDecimal = parseFloat(cantidad).toFixed(2)
 
     //Validaciones
+    //Si descripcion y cantidad diferentes de ' '
     if (descripcion !== '' && cantidad !=='' ){
-      console.log(usuario)
-      AddGasto({
+      //Primero si existe un gasto editamos UPDATE
+      if(gasto){
+        //Mostramos el gasto con este console de test
+        console.log(gasto.id)
+        //En caso de que exista el gasto, aqui capturamos 
+        //los parametros 
+        EditarGasto({
+          id : gasto.id,
+          categoria: categoria,
+          descripcion : descripcion, 
+          cantidad: cantidadDecimal,
+          fecha : getUnixTime(fecha),             
+        })
+        .then(()=>{
+          swal("Se editó el gasto", "Gasto editado", "success")
+          history.push('/')
+        })
+        .catch((error)=>{
+          swal("Algo salió mal", "No se ha actualizado el gasto", "error")
+          console.log(error)
+        }
+        )
+        //En caso de que no tengamos un gasto, hay que Agregar ADD !
+      }else{
+         AddGasto({
         categoria: categoria,
         descripcion : descripcion, 
         cantidad: cantidadDecimal,
@@ -55,7 +105,8 @@ const FormGastos = () => {
         swal("Hubo un error","Revisa tu conexión","error")
         console.log(error)
       })  
-      
+      }
+     
     }else{
       swal("Llenar datos","Te faltan datos a completar","info")
     }
@@ -96,7 +147,13 @@ const FormGastos = () => {
         </div>
 
         <ContenedorBoton>
-              <Boton as="button" primario conIcono type="submit">Agregar Gasto 
+              <Boton as="button" primario conIcono type="submit">
+               {/*  Agregamos un condicional ternario para el texto en caso de que 
+                sea a editar o agregar */}
+                {
+                  gasto ? 'Editar Gasto' : 'Agregar Gasto'
+                }
+                
                 <IconoPlus></IconoPlus>
               </Boton>
         </ContenedorBoton>
