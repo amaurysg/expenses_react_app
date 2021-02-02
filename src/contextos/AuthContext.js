@@ -23,7 +23,7 @@ const AuthProvider = ({children}) => {
   useEffect(() =>{
     //Comprobamos si hay usuario
    const cancelarSuscripcion =  auth.onAuthStateChanged((usuario)=>{
-      console.log(usuario)
+      /* console.log(usuario) */
       setusuario(usuario)
       setCargando(false)
     })
