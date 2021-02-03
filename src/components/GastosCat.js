@@ -23,7 +23,7 @@ const GastosCat = () => {
       <Header>
          
             <BtnBack></BtnBack>
-              <Titulo>Gastos por Categorías</Titulo>
+              <Titulo>Gastos por Categoría</Titulo>
       
       </Header>
 
